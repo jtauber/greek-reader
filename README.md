@@ -2,6 +2,8 @@
 
 Python 3 tool for generating (initially Biblical) Greek readers
 
+[Example from John 18:1-11](https://github.com/jtauber/greek-reader/raw/master/example/reader.pdf). The steps to produce this are listed below under **A More Extended Example**.
+
 
 ## Background
 
