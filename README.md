@@ -78,13 +78,13 @@ create an exclusion file with any words occurring 31 times or more, run:
 
 and then run `./reader.py` with `--exclude exclude31.txt`.
 
-Note tht you can make edits to the file after running `frequency_exclusion.py`
+Note that you can make edits to the file after running `frequency_exclusion.py`
 to tailor the exclusion list to your needs.
 
 
 ### Adding Glosses
 
-If you want to provide glosses, you can pass `--glosses` option to `reader.py`
+If you want to provide glosses, you can pass a `--glosses` option to `reader.py`
 with the name of a YAML file that maps each lemma to a default gloss and
 possibly per-verse overrides. A file with just default (i.e. global) glosses
 might look like this:
@@ -141,3 +141,6 @@ Here is how you might typically use the tools:
     xelatex reader.tex
     xelatex reader.tex
     open reader.pdf
+
+You can see the results of this in the
+[examples directory](https://github.com/jtauber/greek-reader/tree/master/example).
