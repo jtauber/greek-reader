@@ -10,6 +10,7 @@ argparser.add_argument("--headwords", help="headwords file")
 argparser.add_argument("--glosses", help="glosses file")
 argparser.add_argument("--exclude", help="exclusion list file")
 argparser.add_argument("--sblgnt", dest="sblgnt_dir", default="../sblgnt", help="path to MorphGNT sblgnt directory (defaults to ../sblgnt)")
+argparser.add_argument("--typeface", default="Times New Roman", help="typeface to use (defaults to Times New Roman)")
 
 args = argparser.parse_args()
 
@@ -45,19 +46,19 @@ def strip_textcrit(word):
 
 
 print("""
-\\documentclass[a4paper,12pt]{article}
+\\documentclass[a4paper,12pt]{{article}}
 
-\\usepackage{fontspec}
-\\usepackage{dblfnote}
-\\usepackage{pfnote}
+\\usepackage{{fontspec}}
+\\usepackage{{dblfnote}}
+\\usepackage{{pfnote}}
 
-\\setromanfont{Skolar PE}
+\\setromanfont{{{typeface}}}
 
-\\linespread{1.5}
+\\linespread{{1.5}}
 \\spaceskip 0.5em
 
-\\begin{document}
-""")
+\\begin{{document}}
+""".format(typeface=args.typeface))
 
 postponed_chapter = None
 

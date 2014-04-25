@@ -128,6 +128,12 @@ and you don't want to lose them when expanding the coverage of the file to more
 verses (or fewer exclusions).
 
 
+### Changing Typeface
+
+The default typeface is now Times New Roman but you can change this by passing
+a `--typeface` option to `reader.py`.
+
+
 ### A More Extended Example
 
 Here is how you might typically use the tools:
@@ -136,7 +142,7 @@ Here is how you might typically use the tools:
     ./make_glosses.py "John 18:1-11" --exclude example/exclude.txt > example/glosses.yaml
     # edit example/glosses.yaml to your liking
     ./make_headwords.py "John 18:1-11" --exclude example/exclude.txt > example/headwords.yaml
-    ./reader.py "John 18:1-11" --headwords example/headwords.yaml --glosses example/glosses.yaml --exclude example/exclude.txt > example/reader.tex
+    ./reader.py "John 18:1-11" --headwords example/headwords.yaml --glosses example/glosses.yaml --exclude example/exclude.txt --typeface "Skolar PE" > example/reader.tex
     cd example
     xelatex reader.tex
     xelatex reader.tex
