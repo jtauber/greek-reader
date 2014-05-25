@@ -42,7 +42,11 @@ for entry in get_morphgnt(verses, args.sblgnt_dir):
         if lexeme not in exclusions and lexeme not in headwords:
             pos = entry[2]
             if pos in ["N-", "A-"]:
-                headwords[lexeme] = lexemes[lexeme]["danker-entry"]
+                if "full-citation-form" in lexemes[lexeme]:
+                    headword = lexemes[lexeme]["full-citation-form"]
+                else:
+                    headword = lexemes[lexeme]["danker-entry"]
+                headwords[lexeme] = headword
 
 for lexeme, headword in sorted_items(headwords):
     print("{}: {}".format(lexeme, headword))
