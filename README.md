@@ -2,7 +2,8 @@
 
 Python 3 tool for generating (initially Biblical) Greek readers
 
-[Example from John 18:1-11](https://github.com/jtauber/greek-reader/raw/master/example/reader.pdf). The steps to produce this are listed below under **A More Extended Example**.
+[Example from John 18:1-11](https://github.com/jtauber/greek-reader/raw/master/example/reader.pdf).
+The steps to produce this are listed below under **A More Extended Example**.
 
 
 ## Background
@@ -10,7 +11,8 @@ Python 3 tool for generating (initially Biblical) Greek readers
 *MorphGNT* and my *Morphological Lexicon* aren't quite rich enough yet to
 produce the kind of readers I've long wanted to (much less the larger vision of
 a *New Kind of Graded Reader*) but I've been inspired by Brian Renshaw's
-(presumably manually produced) Greek Readers (e.g. [A Good Friday Greek Reader](http://ntexegesis.com/blog/2014/4/18/a-good-friday-greek-reader-john-18-19))
+(presumably manually produced) Greek Readers (e.g.
+[A Good Friday Greek Reader](http://ntexegesis.com/blog/2014/4/18/a-good-friday-greek-reader-john-18-19))
 to at least put together a tool to show what's possible now and then build on
 it.
 

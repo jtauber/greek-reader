@@ -9,8 +9,12 @@ argparser.add_argument("verses", help="verses to cover (e.g. 'John 18:1-11')")
 argparser.add_argument("--headwords", help="headwords file")
 argparser.add_argument("--glosses", help="glosses file")
 argparser.add_argument("--exclude", help="exclusion list file")
-argparser.add_argument("--sblgnt", dest="sblgnt_dir", default="../sblgnt", help="path to MorphGNT sblgnt directory (defaults to ../sblgnt)")
-argparser.add_argument("--typeface", default="Times New Roman", help="typeface to use (defaults to Times New Roman)")
+argparser.add_argument(
+    "--sblgnt", dest="sblgnt_dir", default="../sblgnt",
+    help="path to MorphGNT sblgnt directory (defaults to ../sblgnt)")
+argparser.add_argument(
+    "--typeface", default="Times New Roman",
+    help="typeface to use (defaults to Times New Roman)")
 
 args = argparser.parse_args()
 

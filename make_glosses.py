@@ -2,14 +2,27 @@
 
 import argparse
 
-from utils import load_yaml, load_wordset, sorted_items, get_morphgnt, parse_verse_ranges
+from utils import (
+    load_yaml, load_wordset, sorted_items, get_morphgnt, parse_verse_ranges)
 
 argparser = argparse.ArgumentParser()
-argparser.add_argument("verses", help="verses to cover (e.g. 'John 18:1-11')")
-argparser.add_argument("--exclude", help="exclusion list file")
-argparser.add_argument("--existing", dest="glosses", help="existing glosses file")
-argparser.add_argument("--lexicon", dest="lexemes", default="../morphological-lexicon/lexemes.yaml", help="path to morphological-lexicon lexemes.yaml file (defaults to ../morphological-lexicon/lexemes.yaml)")
-argparser.add_argument("--sblgnt", dest="sblgnt_dir", default="../sblgnt", help="path to MorphGNT sblgnt directory (defaults to ../sblgnt)")
+argparser.add_argument(
+    "verses",
+    help="verses to cover (e.g. 'John 18:1-11')")
+argparser.add_argument(
+    "--exclude",
+    help="exclusion list file")
+argparser.add_argument(
+    "--existing", dest="glosses",
+    help="existing glosses file")
+argparser.add_argument(
+    "--lexicon", dest="lexemes",
+    default="../morphological-lexicon/lexemes.yaml",
+    help="path to morphological-lexicon lexemes.yaml file "
+         "(defaults to ../morphological-lexicon/lexemes.yaml)")
+argparser.add_argument(
+    "--sblgnt", dest="sblgnt_dir", default="../sblgnt",
+    help="path to MorphGNT sblgnt directory (defaults to ../sblgnt)")
 
 args = argparser.parse_args()
 

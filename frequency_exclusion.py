@@ -7,8 +7,12 @@ import os.path
 from utils import morphgnt_filename, print_status
 
 argparser = argparse.ArgumentParser()
-argparser.add_argument("occurrences", type=int, help="lower occurrence limit to exclude")
-argparser.add_argument("--sblgnt", dest="sblgnt_dir", default="../sblgnt", help="path to MorphGNT sblgnt directory (defaults to ../sblgnt)")
+argparser.add_argument(
+    "occurrences", type=int,
+    help="lower occurrence limit to exclude")
+argparser.add_argument(
+    "--sblgnt", dest="sblgnt_dir", default="../sblgnt",
+    help="path to MorphGNT sblgnt directory (defaults to ../sblgnt)")
 args = argparser.parse_args()
 
 lexeme_counts = defaultdict(int)

@@ -14,10 +14,11 @@ def morphgnt_filename(book_num):
     e.g. 1 will return "61-Mt-morphgnt.txt"
     """
     return "{}-{}-morphgnt.txt".format(
-        60 + book_num,
-        [None, "Mt", "Mk", "Lk", "Jn", "Ac", "Ro", "1Co", "2Co", "Ga", "Eph", "Php", "Col",
-"1Th", "2Th", "1Ti", "2Ti", "Tit", "Phm", "Heb", "Jas", "1Pe", "2Pe", "1Jn", "2Jn",
-"3Jn", "Jud", "Re"][book_num]
+        60 + book_num, [
+            None, "Mt", "Mk", "Lk", "Jn", "Ac", "Ro", "1Co", "2Co", "Ga",
+            "Eph", "Php", "Col", "1Th", "2Th", "1Ti", "2Ti", "Tit", "Phm",
+            "Heb", "Jas", "1Pe", "2Pe", "1Jn", "2Jn", "3Jn", "Jud", "Re"
+        ][book_num]
     )
 
 
@@ -51,7 +52,7 @@ def get_morphgnt(verses, morphgnt_dir):
         start_book, start_chapter, start_verse = bcv_tuple(start)
         end_book, end_chapter, end_verse = bcv_tuple(end)
 
-        state = 0 # 0 = not started, 1 = in progress, 2 = ended
+        state = 0  # 0 = not started, 1 = in progress, 2 = ended
 
         for book_num in range(start_book, end_book + 1):
 
@@ -59,7 +60,8 @@ def get_morphgnt(verses, morphgnt_dir):
 
             prev_chapter = prev_verse = None
 
-            with open(os.path.join(morphgnt_dir, morphgnt_filename(book_num))) as morphgnt_file:
+            filename = os.path.join(morphgnt_dir, morphgnt_filename(book_num))
+            with open(filename) as morphgnt_file:
                 for line in morphgnt_file:
                     b, c, v = bcv_tuple(line[:6])
                     if state == 0:
@@ -116,8 +118,10 @@ def load_yaml(filename, wrapper=lambda key, metadata: metadata):
 
 def load_wordset(filename):
     with open(filename) as f:
-        return set(
-            [word.split("#")[0].strip() for word in f if word.split("#")[0].strip()]
+        return set([
+            word.split("#")[0].strip()
+            for word in f
+            if word.split("#")[0].strip()]
         )
 
 
@@ -167,6 +171,7 @@ for i, name_set in enumerate(BOOK_NAMES):
 
 REF_RE = re.compile(r"(?P<book>({})) (?P<chapter>\d+):(?P<verse_start>\d+)(-(?P<verse_end>\d+))?$".format("|".join(BOOK_NAME_MAPPINGS.keys())))
 
+
 def parse_verse_ranges(s):
     m = REF_RE.match(s)
     if not m:
@@ -181,6 +186,9 @@ def parse_verse_ranges(s):
         verse_end = None
 
     if verse_end:
-        return [("{:02d}{:02d}{:02d}".format(book, chapter, verse_start), "{:02d}{:02d}{:02d}".format(book, chapter, verse_end))]
+        return [(
+            "{:02d}{:02d}{:02d}".format(book, chapter, verse_start),
+            "{:02d}{:02d}{:02d}".format(book, chapter, verse_end),
+        )]
     else:
         return ["{:02d}{:02d}{:02d}".format(book, chapter, verse_start)]
