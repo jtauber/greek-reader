@@ -2,6 +2,7 @@
 
 import argparse
 
+from backends import LaTeX
 from utils import load_yaml, load_wordset, get_morphgnt, parse_verse_ranges
 
 argparser = argparse.ArgumentParser()
@@ -49,51 +50,43 @@ def strip_textcrit(word):
     return word.replace("⸀", "").replace("⸂", "").replace("⸃", "")
 
 
-print("""
-\\documentclass[a4paper,12pt]{{article}}
+def output_reader(verses, sblgnt_dir, backend):
+    print(backend.preamble(args.typeface))
 
-\\usepackage{{fontspec}}
-\\usepackage{{dblfnote}}
-\\usepackage{{pfnote}}
+    postponed_chapter = None
 
-\\setromanfont{{{typeface}}}
-
-\\linespread{{1.5}}
-\\spaceskip 0.5em
-
-\\begin{{document}}
-""".format(typeface=args.typeface))
-
-postponed_chapter = None
-
-for entry in get_morphgnt(verses, args.sblgnt_dir):
-    if entry[0] == "WORD":
-        lexeme = entry[8]
-        if lexeme not in exclusions:
-            pos = entry[2]
-            headword = headwords.get(lexeme, lexeme)
-            if glosses:
-                gloss = glosses[lexeme].get(entry[1], glosses[lexeme]["default"])
-                if pos in ["V-"]:
-                    print("{}\\footnote{{{} \\textendash\\ {} \\textendash\\ \\textit{{{}}}}}".format(strip_textcrit(entry[5]), headword, verb_parse(entry[3]), gloss))
+    for entry in get_morphgnt(verses, args.sblgnt_dir):
+        if entry[0] == "WORD":
+            lexeme = entry[8]
+            text = strip_textcrit(entry[5])
+            if lexeme not in exclusions:
+                pos = entry[2]
+                headword = headwords.get(lexeme, lexeme)
+                if glosses:
+                    gloss = glosses[lexeme].get(
+                        entry[1], glosses[lexeme]["default"])
                 else:
-                    print("{}\\footnote{{{} \\textendash\\ \\textit{{{}}}}}".format(strip_textcrit(entry[5]), headword, gloss))
+                    gloss = None
+                if pos in ["V-"]:
+                    parse = verb_parse(entry[3])
+                else:
+                    parse = None
+                print(backend.word(text, headword, parse, gloss))
             else:
-                if pos in ["V-"]:
-                    print("{}\\footnote{{{} \\textendash\\ {}}}".format(strip_textcrit(entry[5]), headword, verb_parse(entry[3])))
-                else:
-                    print("{}\\footnote{{{}}}".format(strip_textcrit(entry[5]), headword))
-        else:
-            print(strip_textcrit(entry[5]))
-    elif entry[0] == "VERSE_START":
-        if postponed_chapter:
-            print("\\textbf{{\Large {}.{}}}".format(postponed_chapter, entry[1]))
-            postponed_chapter = None
-        else:
-            print("\\textbf{{{}}}".format(entry[1]))
-    elif entry[0] == "CHAPTER_START":
-        postponed_chapter = entry[1]
-    else:
-        print("% {}".format(entry))
+                print(backend.word(text))
 
-print("\\end{document}")
+        elif entry[0] == "VERSE_START":
+            if postponed_chapter:
+                print(backend.chapter_verse(postponed_chapter, entry[1]))
+                postponed_chapter = None
+            else:
+                print(backend.verse(entry[1]))
+        elif entry[0] == "CHAPTER_START":
+            postponed_chapter = entry[1]
+        else:
+            print(backend.comment(entry))
+
+    print(backend.postamble())
+
+
+output_reader(verses, args.sblgnt_dir, LaTeX())
