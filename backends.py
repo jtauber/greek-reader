@@ -4,6 +4,7 @@ class LaTeX:
         return """
 \\documentclass[a4paper,12pt]{{article}}
 
+\\usepackage{{setspace}}
 \\usepackage{{fontspec}}
 \\usepackage{{dblfnote}}
 \\usepackage{{pfnote}}
@@ -11,7 +12,7 @@ class LaTeX:
 \\setromanfont{{{typeface}}}
 
 \\linespread{{1.5}}
-\\spaceskip 0.5em
+\\onehalfspacing
 
 \\begin{{document}}
 """.format(typeface=typeface)
