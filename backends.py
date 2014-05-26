@@ -14,6 +14,10 @@ class LaTeX:
 \\linespread{{1.5}}
 \\onehalfspacing
 
+\\makeatletter
+\\renewcommand\\@makefntext[1]{{\\leftskip=2em\\hskip-2em\\@makefnmark#1}}
+\\makeatother
+
 \\begin{{document}}
 """.format(typeface=typeface)
 
