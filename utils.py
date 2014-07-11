@@ -169,7 +169,36 @@ for i, name_set in enumerate(BOOK_NAMES):
     for name in name_set:
         BOOK_NAME_MAPPINGS[name] = i + 1
 
-REF_RE = re.compile(r"(?P<book>({})) (?P<chapter>\d+):(?P<verse_start>\d+)(-(?P<verse_end>\d+))?$".format("|".join(BOOK_NAME_MAPPINGS.keys())))
+REF_RE = re.compile(r"""
+        (?P<book>({}))
+        \s
+        (
+            (
+                (?P<chapter1>\d+)
+                :
+                (?P<verse>\d+)
+                $
+            )|(
+                (?P<chapter2>\d+)
+                :
+                (?P<verse_start1>\d+)
+                -
+                (?P<verse_end1>\d+)
+                $
+            )|(
+                (?P<chapter_start>\d+)
+                :
+                (?P<verse_start2>\d+)
+                -
+                (?P<chapter_end>\d+)
+                :
+                (?P<verse_end2>\d+)
+                $
+            )
+        )
+    """.format("|".join(BOOK_NAME_MAPPINGS.keys())),
+    re.VERBOSE
+)
 
 
 def parse_verse_ranges(s):
@@ -178,17 +207,26 @@ def parse_verse_ranges(s):
         raise ValueError("can't parse verses")
 
     book = BOOK_NAME_MAPPINGS[m.groupdict()["book"]]
-    chapter = int(m.groupdict()["chapter"])
-    verse_start = int(m.groupdict()["verse_start"])
-    if m.groupdict()["verse_end"]:
-        verse_end = int(m.groupdict()["verse_end"])
+    if m.groupdict()["chapter1"]:
+        chapter_start = int(m.groupdict()["chapter1"])
+        chapter_end = int(m.groupdict()["chapter1"])
+        verse_start = int(m.groupdict()["verse"])
+        verse_end = int(m.groupdict()["verse"])
+    elif m.groupdict()["chapter2"]:
+        chapter_start = int(m.groupdict()["chapter2"])
+        chapter_end = int(m.groupdict()["chapter2"])
+        verse_start = int(m.groupdict()["verse_start1"])
+        verse_end = int(m.groupdict()["verse_end1"])
     else:
-        verse_end = None
+        chapter_start = int(m.groupdict()["chapter_start"])
+        chapter_end = int(m.groupdict()["chapter_end"])
+        verse_start = int(m.groupdict()["verse_start2"])
+        verse_end = int(m.groupdict()["verse_end2"])
 
-    if verse_end:
+    if (chapter_start, verse_start) != (chapter_end, verse_end):
         return [(
-            "{:02d}{:02d}{:02d}".format(book, chapter, verse_start),
-            "{:02d}{:02d}{:02d}".format(book, chapter, verse_end),
+            "{:02d}{:02d}{:02d}".format(book, chapter_start, verse_start),
+            "{:02d}{:02d}{:02d}".format(book, chapter_end, verse_end),
         )]
     else:
-        return ["{:02d}{:02d}{:02d}".format(book, chapter, verse_start)]
+        return ["{:02d}{:02d}{:02d}".format(book, chapter_start, verse_start)]
