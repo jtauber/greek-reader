@@ -1,5 +1,9 @@
 class LaTeX:
 
+    def __init__(self):
+        self.footnotes = {}
+        self.footnote_counter = 1
+
     def preamble(self, typeface):
         return """
 \\documentclass[a4paper,12pt]{{article}}
@@ -8,8 +12,23 @@ class LaTeX:
 \\usepackage{{fontspec}}
 \\usepackage{{dblfnote}}
 \\usepackage{{pfnote}}
+\\usepackage{{hyperref}}
 
 \\setromanfont{{{typeface}}}
+
+\\newcommand{{\\footlabel}}[2]{{%
+    \\addtocounter{{footnote}}{{1}}%
+    \\footnotetext[\\thefootnote]{{%
+        \\addtocounter{{footnote}}{{-1}}%
+        \\refstepcounter{{footnote}}\label{{#1}}%
+        #2%
+    }}%
+    $^{{\\ref{{#1}}}}$%
+}}
+
+\\newcommand{{\\footref}}[1]{{%
+    $^{{\\ref{{#1}}}}$%
+}}
 
 \\linespread{{1.5}}
 \\onehalfspacing
@@ -39,7 +58,16 @@ class LaTeX:
             if gloss:
                 footnote.append("\\textendash\\ \\textit{{{}}}".format(gloss))
 
-            return "{}\\footnote{{{}}}".format(text, " ".join(footnote))
+            footnote = " ".join(footnote)
+
+            if footnote in self.footnotes:
+                return "{}\\footref{{{}}}".format(text,
+                                                  self.footnotes[footnote])
+            else:
+                ref = self.footnote_counter
+                self.footnotes[footnote] = ref
+                self.footnote_counter += 1
+                return "{}\\footlabel{{{}}}{{{}}}".format(text, ref, footnote)
 
     def comment(self, text):
         return "% {}".format(text)
