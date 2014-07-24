@@ -33,8 +33,9 @@ For other Greek projects of mine, see <http://jktauber.com/>.
 As well as Python 3, you'll need to install the packages in `requirements.txt`
 via `pip` (preferably in a virtualenv).
 
-You will also need the MorphGNT `sblgnt` files and optionally the
-`morphological-lexicon` (for automatically generating headwords and glosses).
+This requirements file now includes the MorphGNT SBLGNT but if you want the
+headwords and/or glosses from the `morphological-lexicon` you'll need to clone
+that repo separately.
 
 Finally, XeTeX is required as the current output of my scripts is LaTeX with
 Unicode (although I do plan to support other backends eventually). On OS X, I

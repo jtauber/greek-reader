@@ -1,4 +1,3 @@
-import os.path
 import re
 import sys
 import yaml
@@ -6,20 +5,7 @@ import yaml
 from pyuca import Collator
 collator = Collator()
 
-
-def morphgnt_filename(book_num):
-    """
-    return the MorphGNT filename of the given book number.
-
-    e.g. 1 will return "61-Mt-morphgnt.txt"
-    """
-    return "{}-{}-morphgnt.txt".format(
-        60 + book_num, [
-            None, "Mt", "Mk", "Lk", "Jn", "Ac", "Ro", "1Co", "2Co", "Ga",
-            "Eph", "Php", "Col", "1Th", "2Th", "1Ti", "2Ti", "Tit", "Phm",
-            "Heb", "Jas", "1Pe", "2Pe", "1Jn", "2Jn", "3Jn", "Jud", "Re"
-        ][book_num]
-    )
+from pysblgnt import morphgnt_rows
 
 
 def bcv_tuple(bcv):
@@ -31,7 +17,7 @@ def bcv_tuple(bcv):
     return (int(i) for i in [bcv[0:2], bcv[2:4], bcv[4:6]])
 
 
-def get_morphgnt(verses, morphgnt_dir):
+def get_morphgnt(verses):
     """
     yield entries from MorphGNT for the given verses.
 
@@ -60,46 +46,44 @@ def get_morphgnt(verses, morphgnt_dir):
 
             prev_chapter = prev_verse = None
 
-            filename = os.path.join(morphgnt_dir, morphgnt_filename(book_num))
-            with open(filename) as morphgnt_file:
-                for line in morphgnt_file:
-                    b, c, v = bcv_tuple(line[:6])
-                    if state == 0:
-                        if (start_book, start_chapter, start_verse) == (b, c, v):
-                            state = 1
-                        else:
-                            continue
+            for row in morphgnt_rows(book_num):
+                b, c, v = bcv_tuple(row["bcv"])
+                if state == 0:
+                    if (start_book, start_chapter, start_verse) == (b, c, v):
+                        state = 1
+                    else:
+                        continue
 
-                    if (end_book, end_chapter) == (b, c) and end_verse < v:
-                        state = 2
-                        break
+                if (end_book, end_chapter) == (b, c) and end_verse < v:
+                    state = 2
+                    break
 
-                    if end_book == b and end_chapter < c:
-                        state = 2
-                        break
+                if end_book == b and end_chapter < c:
+                    state = 2
+                    break
 
-                    if c != prev_chapter:
-                        if prev_chapter:
-                            if prev_verse:
-                                yield("VERSE_END", prev_verse)
-                            yield("CHAPTER_END", prev_chapter)
-                        yield("CHAPTER_START", c)
-                        prev_chapter = c
-                        prev_verse = None
-
-                    if v != prev_verse:
+                if c != prev_chapter:
+                    if prev_chapter:
                         if prev_verse:
                             yield("VERSE_END", prev_verse)
-                        yield("VERSE_START", v)
-                        prev_verse = v
+                        yield("CHAPTER_END", prev_chapter)
+                    yield("CHAPTER_START", c)
+                    prev_chapter = c
+                    prev_verse = None
 
-                    yield ("WORD", ) + tuple(line.split())
+                if v != prev_verse:
+                    if prev_verse:
+                        yield("VERSE_END", prev_verse)
+                    yield("VERSE_START", v)
+                    prev_verse = v
 
-                if state == 2:
-                    yield("VERSE_END", prev_verse)
-                    yield("CHAPTER_END_PARTIAL", prev_chapter)
-                    yield("BOOK_END_PARTIAL", book_num)
-                    break
+                yield ("WORD", row)
+
+            if state == 2:
+                yield("VERSE_END", prev_verse)
+                yield("CHAPTER_END_PARTIAL", prev_chapter)
+                yield("BOOK_END_PARTIAL", book_num)
+                break
 
             yield("VERSE_END", v)
             yield("CHAPTER_END", c)

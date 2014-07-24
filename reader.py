@@ -11,9 +11,6 @@ argparser.add_argument("--headwords", help="headwords file")
 argparser.add_argument("--glosses", help="glosses file")
 argparser.add_argument("--exclude", help="exclusion list file")
 argparser.add_argument(
-    "--sblgnt", dest="sblgnt_dir", default="../sblgnt",
-    help="path to MorphGNT sblgnt directory (defaults to ../sblgnt)")
-argparser.add_argument(
     "--typeface", default="Times New Roman",
     help="typeface to use (defaults to Times New Roman)")
 
@@ -50,25 +47,26 @@ def strip_textcrit(word):
     return word.replace("⸀", "").replace("⸂", "").replace("⸃", "")
 
 
-def output_reader(verses, sblgnt_dir, backend):
+def output_reader(verses, backend):
     print(backend.preamble(args.typeface))
 
     postponed_chapter = None
 
-    for entry in get_morphgnt(verses, args.sblgnt_dir):
+    for entry in get_morphgnt(verses):
         if entry[0] == "WORD":
-            lexeme = entry[8]
-            text = strip_textcrit(entry[5])
+            row = entry[1]
+            lexeme = row["lemma"]
+            text = strip_textcrit(row["text"])
             if lexeme not in exclusions:
-                pos = entry[2]
+                pos = row["ccat-pos"]
                 headword = headwords.get(lexeme, lexeme)
                 if glosses:
                     gloss = glosses[lexeme].get(
-                        entry[1], glosses[lexeme]["default"])
+                        row["bcv"], glosses[lexeme]["default"])
                 else:
                     gloss = None
                 if pos in ["V-"]:
-                    parse = verb_parse(entry[3])
+                    parse = verb_parse(row["ccat-parse"])
                 else:
                     parse = None
                 print(backend.word(text, headword, parse, gloss))
@@ -89,4 +87,4 @@ def output_reader(verses, sblgnt_dir, backend):
     print(backend.postamble())
 
 
-output_reader(verses, args.sblgnt_dir, LaTeX())
+output_reader(verses, LaTeX())

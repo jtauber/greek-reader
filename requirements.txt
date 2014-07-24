@@ -1,2 +1,3 @@
 PyYAML==3.11
 pyuca==1.0
+py-sblgnt==0.1
