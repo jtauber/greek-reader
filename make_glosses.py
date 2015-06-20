@@ -20,9 +20,6 @@ argparser.add_argument(
     default="../morphological-lexicon/lexemes.yaml",
     help="path to morphological-lexicon lexemes.yaml file "
          "(defaults to ../morphological-lexicon/lexemes.yaml)")
-argparser.add_argument(
-    "--sblgnt", dest="sblgnt_dir", default="../sblgnt",
-    help="path to MorphGNT sblgnt directory (defaults to ../sblgnt)")
 
 args = argparser.parse_args()
 
@@ -41,13 +38,13 @@ else:
     glosses = {}
 
 
-for entry in get_morphgnt(verses, args.sblgnt_dir):
+for entry in get_morphgnt(verses):
     if entry[0] == "WORD":
-        lexeme = entry[8]
-        if lexeme not in exclusions and lexeme not in glosses:
-            glosses[lexeme] = {"default": lexemes[lexeme].get("gloss", "@@@")}
+        lemma = entry[1]["lemma"]
+        if lemma not in exclusions and lemma not in glosses:
+            glosses[lemma] = {"default": lexemes[lemma].get("gloss", "@@@")}
 
-for lexeme, gloss_entries in sorted_items(glosses):
-    print("{}:".format(lexeme))
+for lemma, gloss_entries in sorted_items(glosses):
+    print("{}:".format(lemma))
     for k, v in sorted_items(gloss_entries):
         print("    {}: {}".format(k, v))
