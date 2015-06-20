@@ -8,6 +8,8 @@ class LaTeX:
 \\usepackage{{fontspec}}
 \\usepackage{{dblfnote}}
 \\usepackage{{pfnote}}
+\\usepackage{{polyglossia}}
+\\setdefaultlanguage[variant=ancient]{{greek}}
 
 \\setromanfont{{{typeface}}}
 
@@ -54,7 +56,7 @@ class SILE:
         return """\
 \\begin[papersize=a4,class=book]{{document}}
 
-\\font[family="{typeface}",size=12pt]
+\\font[family="{typeface}",size=12pt,language=el]
 \\set[parameter=document.lineskip,value=6pt]
 """.format(typeface=typeface)
 
