@@ -152,3 +152,11 @@ Here is how you might typically use the tools:
 
 You can see the results of this in the
 [examples directory](https://github.com/jtauber/greek-reader/tree/master/example).
+
+
+### Alternative Backends
+
+A `--backend` option can be provided to `reader.py` to use an alternative backend.
+This option takes a module-qualified Python class name. As well as the default
+`backends.LaTeX`, there is an experimental `backends.SILE` included for
+[The SILE Typesetter](http://www.sile-typesetter.org).
