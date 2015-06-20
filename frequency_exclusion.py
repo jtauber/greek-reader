@@ -2,7 +2,6 @@
 
 import argparse
 from collections import defaultdict
-import os.path
 
 from pysblgnt import morphgnt_rows
 from utils import print_status
