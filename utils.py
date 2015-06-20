@@ -1,3 +1,4 @@
+import importlib
 import re
 import sys
 import yaml
@@ -214,3 +215,10 @@ def parse_verse_ranges(s):
         )]
     else:
         return ["{:02d}{:02d}{:02d}".format(book, chapter_start, verse_start)]
+
+
+def load_path_attr(path):
+    i = path.rfind(".")
+    module, attr = path[:i], path[i + 1:]
+    mod = importlib.import_module(module)
+    return getattr(mod, attr)

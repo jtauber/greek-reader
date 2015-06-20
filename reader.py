@@ -2,8 +2,8 @@
 
 import argparse
 
-from backends import LaTeX
-from utils import load_yaml, load_wordset, get_morphgnt, parse_verse_ranges
+from utils import load_yaml, load_wordset, load_path_attr
+from utils import get_morphgnt, parse_verse_ranges
 
 argparser = argparse.ArgumentParser()
 argparser.add_argument("verses", help="verses to cover (e.g. 'John 18:1-11')")
@@ -13,6 +13,10 @@ argparser.add_argument("--exclude", help="exclusion list file")
 argparser.add_argument(
     "--typeface", default="Times New Roman",
     help="typeface to use (defaults to Times New Roman)")
+argparser.add_argument(
+    "--backend", default="backends.LaTeX",
+    help="python class to use for backend (defaults to backends.LaTeX)")
+
 
 args = argparser.parse_args()
 
@@ -87,4 +91,4 @@ def output_reader(verses, backend):
     print(backend.postamble())
 
 
-output_reader(verses, LaTeX())
+output_reader(verses, load_path_attr(args.backend)())
