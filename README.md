@@ -39,7 +39,7 @@ that repo separately.
 
 Finally, XeTeX is required as the current output of my scripts is LaTeX with
 Unicode (although I do plan to support other backends eventually). On OS X, I
-use the MacTeX distribution.
+use the [MacTeX distribution](http://tug.org/mactex/mactex-download.html).
 
 
 ## How to Use
