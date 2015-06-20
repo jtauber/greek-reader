@@ -59,10 +59,10 @@ class SILE:
 """.format(typeface=typeface)
 
     def chapter_verse(self, chapter, verse):
-        return "\\font[size=16pt,weight=700]{{{}.{}}}\nobreak".format(chapter, verse)
+        return "\\font[size=16pt,weight=700]{{{}.{}}}\\nobreak".format(chapter, verse)
 
     def verse(self, verse):
-        return "\\font[weight=700]{{{}}}\nobreak".format(verse)
+        return "\\font[weight=700]{{{}}}\\nobreak".format(verse)
 
     def word(self, text, headword=None, parse=None, gloss=None):
         if headword is None and parse is None and gloss is None:
