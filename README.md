@@ -47,8 +47,7 @@ use the MacTeX distribution.
 
 ### Quick Start
 
-Assuming the MorphGNT `sblgnt` directory (`tisch-merge` branch) is checked out
-in a directory next to `greek-reader` you can just type:
+Assuming you've installed the requirements, you can just type:
 
     ./reader.py "John 18:1-11" > reader.tex
 
