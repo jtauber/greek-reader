@@ -2,7 +2,7 @@ class LaTeX:
 
     def preamble(self, typeface, language):
         return """
-\\documentclass[a4paper,12pt]{{article}}
+\\documentclass[a4paper,12pt]{{scrartcl}}
 
 \\usepackage{{setspace}}
 \\usepackage{{fontspec}}
