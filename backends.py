@@ -1,6 +1,6 @@
 class LaTeX:
 
-    def preamble(self, typeface):
+    def preamble(self, typeface, language):
         return """
 \\documentclass[a4paper,12pt]{{article}}
 
@@ -10,6 +10,7 @@ class LaTeX:
 \\usepackage{{pfnote}}
 \\usepackage{{polyglossia}}
 \\setdefaultlanguage[variant=ancient]{{greek}}
+\\setotherlanguage{{{language}}}
 
 \\setromanfont{{{typeface}}}
 
@@ -21,7 +22,7 @@ class LaTeX:
 \\makeatother
 
 \\begin{{document}}
-""".format(typeface=typeface)
+""".format(typeface=typeface, language=self.tex_lang(language))
 
     def chapter_verse(self, chapter, verse):
         return "\\textbf{{\Large {}.{}}}~".format(chapter, verse)
@@ -29,7 +30,7 @@ class LaTeX:
     def verse(self, verse):
         return "\\textbf{{{}}}~".format(verse)
 
-    def word(self, text, headword=None, parse=None, gloss=None):
+    def word(self, text, headword=None, parse=None, gloss=None, language=None):
         if headword is None and parse is None and gloss is None:
             return text
         else:
@@ -39,7 +40,7 @@ class LaTeX:
             if parse:
                 footnote.append("\\textendash\\ {}".format(parse))
             if gloss:
-                footnote.append("\\textendash\\ \\textit{{{}}}".format(gloss))
+                footnote.append("\\textendash\\ \\text{}{{\\textit{{{}}}}}".format(self.tex_lang(language), gloss))
 
             return "{}\\footnote{{{}}}".format(text, " ".join(footnote))
 
@@ -49,10 +50,17 @@ class LaTeX:
     def postamble(self):
         return "\\end{document}"
 
+    def tex_lang(self, language):
+        language_map = {
+            'en': 'english',
+            'tr': 'turkish'
+        }
+        return language_map[language]
+
 
 class SILE:
 
-    def preamble(self, typeface):
+    def preamble(self, typeface, language):
         return """\
 \\begin[papersize=a4,class=book]{{document}}
 
@@ -66,7 +74,7 @@ class SILE:
     def verse(self, verse):
         return "\\font[weight=700]{{{}}}\\nobreak".format(verse)
 
-    def word(self, text, headword=None, parse=None, gloss=None):
+    def word(self, text, headword=None, parse=None, gloss=None, language=None):
         if headword is None and parse is None and gloss is None:
             return text
         else:
@@ -76,7 +84,7 @@ class SILE:
             if parse:
                 footnote.append("– {}".format(parse))
             if gloss:
-                footnote.append("– \\font[style=italic]{{{}}}".format(gloss))
+                footnote.append("– \\font[style=italic,language={}]{{{}}}".format(language, gloss))
 
             return "{}\\footnote{{{}}}".format(text, " ".join(footnote))
 

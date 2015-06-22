@@ -9,6 +9,9 @@ argparser = argparse.ArgumentParser()
 argparser.add_argument("verses", help="verses to cover (e.g. 'John 18:1-11')")
 argparser.add_argument("--headwords", help="headwords file")
 argparser.add_argument("--glosses", help="glosses file")
+argparser.add_argument(
+    "--language", default="en",
+    help="language of glosses and other non-Greek text (defaults to en)")
 argparser.add_argument("--exclude", help="exclusion list file")
 argparser.add_argument(
     "--typeface", default="Times New Roman",
@@ -52,7 +55,7 @@ def strip_textcrit(word):
 
 
 def output_reader(verses, backend):
-    print(backend.preamble(args.typeface))
+    print(backend.preamble(args.typeface, args.language))
 
     postponed_chapter = None
 
@@ -73,7 +76,7 @@ def output_reader(verses, backend):
                     parse = verb_parse(row["ccat-parse"])
                 else:
                     parse = None
-                print(backend.word(text, headword, parse, gloss))
+                print(backend.word(text, headword, parse, gloss, args.language))
             else:
                 print(backend.word(text))
 
