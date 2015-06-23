@@ -4,15 +4,14 @@ import argparse
 
 from utils import load_yaml, load_wordset, load_path_attr
 from utils import get_morphgnt, parse_verse_ranges
-from backends import LangMap
 
 argparser = argparse.ArgumentParser()
 argparser.add_argument("verses", help="verses to cover (e.g. 'John 18:1-11')")
 argparser.add_argument("--headwords", help="headwords file")
 argparser.add_argument("--glosses", help="glosses file")
 argparser.add_argument(
-    "--language", default="en",
-    help="language of glosses and other non-Greek text (defaults to en)")
+    "--language", default="eng",
+    help="language of glosses and other non-Greek text (defaults to eng)")
 argparser.add_argument("--exclude", help="exclusion list file")
 argparser.add_argument(
     "--typeface", default="Times New Roman",
@@ -41,6 +40,13 @@ if args.headwords:
 else:
     headwords = {}
 
+languages = load_yaml("languages.yaml")
+typesetter = args.backend.split(".")[-1]
+if args.language in languages and typesetter in languages[args.language]:
+        language = languages[args.language][typesetter]
+else:
+    language = args.language
+
 
 def verb_parse(ccat_parse):
     text = ccat_parse[1:4]
@@ -56,8 +62,7 @@ def strip_textcrit(word):
 
 
 def output_reader(verses, backend, language):
-    lang = LangMap.lookup(language, args.backend)
-    print(backend.preamble(args.typeface, lang))
+    print(backend.preamble(args.typeface, language))
 
     postponed_chapter = None
 
@@ -78,7 +83,7 @@ def output_reader(verses, backend, language):
                     parse = verb_parse(row["ccat-parse"])
                 else:
                     parse = None
-                print(backend.word(text, headword, parse, gloss, lang))
+                print(backend.word(text, headword, parse, gloss, language))
             else:
                 print(backend.word(text))
 
@@ -96,4 +101,4 @@ def output_reader(verses, backend, language):
     print(backend.postamble())
 
 
-output_reader(verses, load_path_attr(args.backend)(), args.language)
+output_reader(verses, load_path_attr(args.backend)(), language)

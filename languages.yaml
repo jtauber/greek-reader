@@ -1,0 +1,203 @@
+afr:
+    SILE: af
+amh:
+    LaTeX: amharic
+ara:
+    LaTeX: arabic
+asm:
+    SILE: as
+ast:
+    LaTeX: asturian
+ben:
+    SILE: bn
+    LaTeX: bengali
+bod:
+    SILE: bo
+    LaTeX: tibetan
+bre:
+    LaTeX: breton
+bul:
+    SILE: bg
+    LaTeX: bulgarian
+cat:
+    SILE: ca
+    LaTeX: catalan
+ces:
+    SILE: cs
+    LaTeX: czech
+cop:
+    LaTeX: coptic
+cym:
+    SILE: cy
+    LaTeX: welsh
+dan:
+    SILE: da
+    LaTeX: danish
+deu:
+    SILE: de
+    LaTeX: german
+div:
+    LaTeX: divehi
+dsb:
+    LaTeX: lsorbian
+dsb:
+    LaTeX: usorbian
+ell:
+    SILE: el
+    LaTeX: greek
+eng:
+    SILE: en
+    LaTeX: english
+epo:
+    SILE: eo
+    LaTeX: esperanto
+est:
+    SILE: et
+    LaTeX: estonian
+eus:
+    SILE: eu
+    LaTeX: basque
+fas:
+    LaTeX: farsi
+fin:
+    SILE: fi
+    LaTeX: finnish
+fra:
+    SILE: fr
+    LaTeX: french
+fur:
+    LaTeX: friulan
+gla:
+    LaTeX: scoish
+gle:
+    SILE: ga
+    LaTeX: irish
+glg:
+    LaTeX: galician
+heb:
+    LaTeX: hebrew
+hin:
+    SILE: hi
+    LaTeX: hindi
+hrv:
+    SILE: hr
+    LaTeX: croatian
+hun:
+    SILE: hu
+    LaTeX: magyar
+hye:
+    LaTeX: armenian
+ina:
+    LaTeX: interlingua
+ind:
+    SILE: id
+    LaTeX: bahasai
+isl:
+    SILE: is
+    LaTeX: icelandic
+ita:
+    SILE: it
+    LaTeX: italian
+jpn:
+    SILE: ja
+kan:
+    SILE: kn
+    LaTeX: kannada
+lao:
+    LaTeX: lao
+lat:
+    SILE: la
+    LaTeX: latin
+lav:
+    SILE: lv
+    LaTeX: latvian
+lit:
+    SILE: lt
+    LaTeX: lithuanian
+mal:
+    SILE: ml
+    LaTeX: malayalam
+mar:
+    SILE: mr
+    LaTeX: marathi
+msa:
+    LaTeX: bahasam
+nld:
+    LaTeX: dutch
+nno:
+    SILE: no
+    LaTeX: nynorsk
+nor:
+    LaTeX: norsk
+nqo:
+    LaTeX: nko
+oci:
+    LaTeX: occitan
+ori:
+    SILE: or
+pan:
+    SILE: pa
+pms:
+    LaTeX: piedmontese
+pol:
+    SILE: pl
+    LaTeX: polish
+pot:
+    SILE: pt
+    LaTeX: portuges
+ptb:
+    LaTeX: brazil
+roh:
+    SILE: rm
+    LaTeX: romansh
+ron:
+    SILE: ro
+    LaTeX: romanian
+rus:
+    SILE: ru
+    LaTeX: russian
+slk:
+    SILE: sk
+    LaTeX: slovak
+slv:
+    SILE: sl
+    LaTeX: slovenian
+sme:
+    LaTeX: samin
+san:
+    SILE: sa
+    LaTeX: sanskrit
+spa:
+    SILE: es
+    LaTeX: spanish
+sqi:
+    LaTeX: albanian
+srp:
+    SILE: sr
+    LaTeX: serbian
+swe:
+    SILE: sv
+    LaTeX: swedish
+syc:
+    LaTeX: syriac
+tam:
+    SILE: ta
+    LaTeX: tamil
+tel:
+    LaTeX: telugu
+tha:
+    SILE: th
+    LaTeX: thai
+tuk:
+    SILE: tk
+    LaTeX: turkmen
+tur:
+    SILE: tr
+    LaTeX: turkish
+ukr:
+    SILE: uk
+    LaTeX: ukrainian
+urd:
+    LaTeX: urdu
+vie:
+    LaTeX: vietnamese
