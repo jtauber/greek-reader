@@ -4,6 +4,7 @@ import argparse
 
 from utils import load_yaml, load_wordset, load_path_attr
 from utils import get_morphgnt, parse_verse_ranges
+from backends import LangMap
 
 argparser = argparse.ArgumentParser()
 argparser.add_argument("verses", help="verses to cover (e.g. 'John 18:1-11')")
@@ -54,8 +55,9 @@ def strip_textcrit(word):
     return word.replace("⸀", "").replace("⸂", "").replace("⸃", "")
 
 
-def output_reader(verses, backend):
-    print(backend.preamble(args.typeface, args.language))
+def output_reader(verses, backend, language):
+    lang = LangMap.lookup(language, args.backend)
+    print(backend.preamble(args.typeface, lang))
 
     postponed_chapter = None
 
@@ -76,7 +78,7 @@ def output_reader(verses, backend):
                     parse = verb_parse(row["ccat-parse"])
                 else:
                     parse = None
-                print(backend.word(text, headword, parse, gloss, args.language))
+                print(backend.word(text, headword, parse, gloss, lang))
             else:
                 print(backend.word(text))
 
@@ -94,4 +96,4 @@ def output_reader(verses, backend):
     print(backend.postamble())
 
 
-output_reader(verses, load_path_attr(args.backend)())
+output_reader(verses, load_path_attr(args.backend)(), args.language)
