@@ -2,8 +2,8 @@
 
 Python 3 tool for generating (initially Biblical) Greek readers
 
-[Example from John 18:1-11](https://github.com/jtauber/greek-reader/raw/master/example/reader.pdf).
-The steps to produce this are listed below under **A More Extended Example**.
+[Example from John 18:1-11][example]. The steps to produce this are listed
+below under **A More Extended Example**.
 
 
 ## Background
@@ -11,10 +11,9 @@ The steps to produce this are listed below under **A More Extended Example**.
 *MorphGNT* and my *Morphological Lexicon* aren't quite rich enough yet to
 produce the kind of readers I've long wanted to (much less the larger vision of
 a *New Kind of Graded Reader*) but I've been inspired by Brian Renshaw's
-(presumably manually produced) Greek Readers (e.g.
-[A Good Friday Greek Reader](http://ntexegesis.com/blog/2014/4/18/a-good-friday-greek-reader-john-18-19))
-to at least put together a tool to show what's possible now and then build on
-it.
+(presumably manually produced) Greek Readers (e.g. [A Good Friday Greek
+Reader][goodfri]) to at least put together a tool to show what's possible now
+and then build on it.
 
 Of course, this isn't the first time I've written code to generate documents
 from my Greek New Testament databases. This year marks the 20th anniversary of
@@ -38,8 +37,8 @@ headwords and/or glosses from the `morphological-lexicon` you'll need to clone
 that repo separately.
 
 Finally, XeTeX is required as the current output of my scripts is LaTeX with
-Unicode (although I do plan to support other backends eventually). On OS X, I
-use the [MacTeX distribution](http://tug.org/mactex/mactex-download.html).
+Unicode (although I do plan to support other backends eventually). On OS X,
+I use the [MacTeX distribution][mactex].
 
 
 ## How to Use
@@ -51,11 +50,12 @@ Assuming you've installed the requirements, you can just type:
 
     ./reader.py "John 18:1-11" > reader.tex
 
-You can then run
+You can then run:
 
     xelatex reader.tex
+    xelatex reader.tex
 
-twice (to ensure the footnotes are properly numbered).
+The two rendering passes ensure that the footnotes are properly numbered.
 
 Note that the `reader.pdf` PDF that results will footnote every word with the
 lemma from MorphGNT and, in the case of verbs will include parsing codes. No
@@ -108,6 +108,13 @@ the `--existing` option. This is useful if you've already made edits to the file
 and you don't want to lose them when expanding the coverage of the file to more
 verses (or fewer exclusions).
 
+When typesetting a reader with glosses, the gloss language should be specified
+when you generate the reader file. If no value is specified it will default to
+English, but if your gloss words are in another language it should be specified
+with the `--language` option. Languages should be specified using three letter
+ISO-639-3 codes (e.g. `--language rus` for Russion or `--language spa` for
+Spanish).
+
 
 ### Overriding Headwords
 
@@ -141,22 +148,41 @@ a `--typeface` option to `reader.py`.
 Here is how you might typically use the tools:
 
     ./frequency_exclusion.py 31 > example/exclude.txt
-    ./make_glosses.py "John 18:1-11" --exclude example/exclude.txt > example/glosses.yaml
+    ./make_glosses.py \
+        --exclude example/exclude.txt \
+        "John 18:1-11" > example/glosses.yaml
     # edit example/glosses.yaml to your liking
-    ./make_headwords.py "John 18:1-11" --exclude example/exclude.txt > example/headwords.yaml
-    ./reader.py "John 18:1-11" --headwords example/headwords.yaml --glosses example/glosses.yaml --exclude example/exclude.txt --typeface "Skolar PE" > example/reader.tex
+    ./make_headwords.py \
+        --exclude example/exclude.txt \
+        "John 18:1-11" > example/headwords.yaml
+    ./reader.py \
+        --headwords example/headwords.yaml \
+        --glosses example/glosses.yaml \
+        --language eng \
+        --exclude example/exclude.txt \
+        --typeface "Skolar PE" \
+        --backend backends.LaTeX \
+        "John 18:1-11" > example/reader.tex
     cd example
     xelatex reader.tex
     xelatex reader.tex
     open reader.pdf
 
-You can see the results of this in the
-[examples directory](https://github.com/jtauber/greek-reader/tree/master/example).
+You can see the results of this in the [examples directory][examples].
 
 
 ### Alternative Backends
 
-A `--backend` option can be provided to `reader.py` to use an alternative backend.
-This option takes a module-qualified Python class name. As well as the default
-`backends.LaTeX`, there is an experimental `backends.SILE` included for
-[The SILE Typesetter](http://www.sile-typesetter.org).
+A `--backend` option can be provided to `reader.py` to use an alternative
+backend. This option takes a module-qualified Python class name. As well as the
+default `backends.LaTeX`, there is an experimental `backends.SILE` included for
+the [SILE Typesetter][sile].
+
+    ./reader.py --backend backends.SILE "John 18:1-11" > reader.sil
+    sile reader.sil
+
+  [example]: https://github.com/jtauber/greek-reader/raw/master/example/reader.pdf
+  [goodfri]: http://ntexegesis.com/blog/2014/4/18/a-good-friday-greek-reader-john-18-19
+  [examples]: https://github.com/jtauber/greek-reader/tree/master/example
+  [mactex]: http://tug.org/mactex/mactex-download.html
+  [sile]: http://www.sile-typesetter.org
