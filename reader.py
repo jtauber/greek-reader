@@ -40,13 +40,6 @@ if args.headwords:
 else:
     headwords = {}
 
-languages = load_yaml("languages.yaml")
-typesetter = args.backend.split(".")[-1]
-if args.language in languages and typesetter in languages[args.language]:
-        language = languages[args.language][typesetter]
-else:
-    language = args.language
-
 
 def verb_parse(ccat_parse):
     text = ccat_parse[1:4]
@@ -101,4 +94,4 @@ def output_reader(verses, backend, language):
     print(backend.postamble())
 
 
-output_reader(verses, load_path_attr(args.backend)(), language)
+output_reader(verses, load_path_attr(args.backend)(), args.language)

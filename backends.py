@@ -1,4 +1,13 @@
+from utils import load_yaml
+
+
 class LaTeX:
+
+    def __init__(self):
+        self.settings = load_yaml("LaTeX.yaml")
+
+    def lang_code(self, language):
+        return self.settings['languages'][language]
 
     def preamble(self, typeface, language):
         return """
@@ -22,7 +31,7 @@ class LaTeX:
 \\makeatother
 
 \\begin{{document}}
-""".format(typeface=typeface, language=language)
+""".format(typeface=typeface, language=self.lang_code(language))
 
     def chapter_verse(self, chapter, verse):
         return "\\textbf{{\Large {}.{}}}~".format(chapter, verse)
@@ -40,7 +49,7 @@ class LaTeX:
             if parse:
                 footnote.append("\\textendash\\ {}".format(parse))
             if gloss:
-                footnote.append("\\textendash\\ \\text{}{{\\textit{{{}}}}}".format(language, gloss))
+                footnote.append("\\textendash\\ \\text{}{{\\textit{{{}}}}}".format(self.lang_code(language), gloss))
 
             return "{}\\footnote{{{}}}".format(text, " ".join(footnote))
 
@@ -52,6 +61,12 @@ class LaTeX:
 
 
 class SILE:
+
+    def __init__(self):
+        self.settings = load_yaml("SILE.yaml")
+
+    def lang_code(self, language):
+        return self.settings['languages'][language]
 
     def preamble(self, typeface, language):
         return """\
@@ -77,7 +92,7 @@ class SILE:
             if parse:
                 footnote.append("– {}".format(parse))
             if gloss:
-                footnote.append("– \\font[style=italic,language={}]{{{}}}".format(language, gloss))
+                footnote.append("– \\font[style=italic,language={}]{{{}}}".format(self.lang_code(language), gloss))
 
             return "{}\\footnote{{{}}}".format(text, " ".join(footnote))
 
