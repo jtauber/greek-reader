@@ -1,11 +1,42 @@
+sudo: false
+
 language: python
 
 python:
   - 3.3
   - 3.4
 
+addons:
+  apt:
+    packages:
+      - texlive-xetex
+      - texlive-latex-recommended
+      - lmodern
+      - texlive-latex-extra
+      - texlive-lang-greek
+      - fonts-linuxlibertine
+
 install:
   - pip install flake8
+  - pip install -r requirements.txt
+  - mkdir ci.deps
+  - curl -o ci.deps/lexemes.yaml https://raw.githubusercontent.com/morphgnt/morphological-lexicon/4e3dbfd872bc12d11d8949be98e4f72dfc0ea9f0/lexemes.yaml
+
+before_script:
+  - flake8 .
+  - fc-list
+  - mkdir ci.out
 
 script:
-  - flake8 .
+  - ./frequency_exclusion.py 31 > ci.out/exclude.txt
+  - ./make_glosses.py --exclude ci.out/exclude.txt --lexicon ci.deps/lexemes.yaml "John 18:1-11" > ci.out/glosses.yaml
+  - ./make_headwords.py --exclude ci.out/exclude.txt --lexicon ci.deps/lexemes.yaml "John 18:1-11" > ci.out/headwords.yaml
+  - ./reader.py --headwords ci.out/headwords.yaml --glosses ci.out/glosses.yaml --exclude ci.out/exclude.txt --typeface "Linux Libertine O" "John 18:1-11" --backend backends.LaTeX > ci.out/reader.tex
+  - cd ci.out
+  - xelatex reader.tex
+  - xelatex reader.tex
+  - cd ..
+  - ls -l ci.out/reader.pdf
+
+after_success:
+  - md5sum ci.out/reader.pdf

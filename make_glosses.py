@@ -42,7 +42,7 @@ for entry in get_morphgnt(verses):
     if entry[0] == "WORD":
         lemma = entry[1]["lemma"]
         if lemma not in exclusions and lemma not in glosses:
-            glosses[lemma] = {"default": lexemes[lemma].get("gloss", "@@@")}
+            glosses[lemma] = {"default": lexemes[lemma].get("gloss", "\"@@@\"")}
 
 for lemma, gloss_entries in sorted_items(glosses):
     print("{}:".format(lemma))
