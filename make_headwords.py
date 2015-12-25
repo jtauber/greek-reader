@@ -15,9 +15,6 @@ argparser.add_argument(
     default="../morphological-lexicon/lexemes.yaml",
     help="path to morphological-lexicon lexemes.yaml file "
     "(defaults to ../morphological-lexicon/lexemes.yaml)")
-argparser.add_argument(
-    "--sblgnt", dest="sblgnt_dir", default="../sblgnt",
-    help="path to MorphGNT sblgnt directory (defaults to ../sblgnt)")
 
 args = argparser.parse_args()
 
@@ -36,17 +33,17 @@ else:
     headwords = {}
 
 
-for entry in get_morphgnt(verses, args.sblgnt_dir):
+for entry in get_morphgnt(verses):
     if entry[0] == "WORD":
-        lexeme = entry[8]
-        if lexeme not in exclusions and lexeme not in headwords:
-            pos = entry[2]
+        lemma = entry[1]["lemma"]
+        if lemma not in exclusions and lemma not in headwords:
+            pos = entry[1]["ccat-pos"]
             if pos in ["N-", "A-"]:
-                if "full-citation-form" in lexemes[lexeme]:
-                    headword = lexemes[lexeme]["full-citation-form"]
+                if "full-citation-form" in lexemes[lemma]:
+                    headword = lexemes[lemma]["full-citation-form"]
                 else:
-                    headword = lexemes[lexeme]["danker-entry"]
-                headwords[lexeme] = headword
+                    headword = lexemes[lemma]["danker-entry"]
+                headwords[lemma] = headword
 
-for lexeme, headword in sorted_items(headwords):
-    print("{}: {}".format(lexeme, headword))
+for lemma, headword in sorted_items(headwords):
+    print("{}: {}".format(lemma, headword))
