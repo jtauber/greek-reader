@@ -15,6 +15,7 @@ addons:
       - texlive-latex-extra
       - texlive-lang-greek
       - fonts-linuxlibertine
+      - poppler-utils
 
 install:
   - pip install flake8
@@ -39,4 +40,5 @@ script:
   - ls -l ci.out/reader.pdf
 
 after_success:
-  - md5sum ci.out/reader.pdf
+  - file ci.out/reader.pdf
+  - pdftotext ci.out/reader.pdf - # http://stackoverflow.com/questions/6187250/pdf-text-extraction/6189489#6189489
