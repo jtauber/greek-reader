@@ -24,6 +24,13 @@ install:
   - curl -o ci.deps/lexemes.yaml https://raw.githubusercontent.com/morphgnt/morphological-lexicon/4e3dbfd872bc12d11d8949be98e4f72dfc0ea9f0/lexemes.yaml
 
 before_script:
+  - describe_pdf_file() { pdftotext "${1:?}" -; } # http://stackoverflow.com/questions/6187250/pdf-text-extraction/6189489#6189489
+  - build_reader_LaTeX() { local D="${1:?}"; local T="${2:?}.tex"; cat - > "${D}/$T"; cd "$D"; xelatex "$T" && xelatex "$T" || exit 1; }
+  - reader_filename_LaTeX() { echo "${1:?}.pdf"; }
+  - describe_reader_file_LaTeX() { describe_pdf_file "${1:?}"; }
+  - build_reader_SILE() { local D="${1:?}"; local T="${2:?}.sil"; cat - > "${D}/$T"; cd "$D"; sile "$T" || exit 1; }
+  - reader_filename_SILE() { echo "${1:?}.pdf"; }
+  - describe_reader_file_SILE() { describe_pdf_file "${1:?}"; }
   - flake8 .
   - fc-list
   - mkdir ci.out
@@ -32,13 +39,19 @@ script:
   - ./frequency_exclusion.py 31 > ci.out/exclude.txt
   - ./make_glosses.py --exclude ci.out/exclude.txt --lexicon ci.deps/lexemes.yaml "John 18:1-11" > ci.out/glosses.yaml
   - ./make_headwords.py --exclude ci.out/exclude.txt --lexicon ci.deps/lexemes.yaml "John 18:1-11" > ci.out/headwords.yaml
-  - ./reader.py --headwords ci.out/headwords.yaml --glosses ci.out/glosses.yaml --exclude ci.out/exclude.txt --typeface "Linux Libertine O" "John 18:1-11" --backend backends.LaTeX > ci.out/reader.tex
-  - cd ci.out
-  - xelatex reader.tex
-  - xelatex reader.tex
-  - cd ..
-  - ls -l ci.out/reader.pdf
+  - ./reader.py --headwords ci.out/headwords.yaml --glosses ci.out/glosses.yaml --language eng --exclude ci.out/exclude.txt --typeface "Linux Libertine O" "John 18:1-11" --backend backends.$BACKEND | build_reader_$BACKEND ci.out reader
+  - RF=$(reader_filename_$BACKEND reader)
+  - ls -l ci.out/$RF
 
 after_success:
-  - file ci.out/reader.pdf
-  - pdftotext ci.out/reader.pdf - # http://stackoverflow.com/questions/6187250/pdf-text-extraction/6189489#6189489
+  - file ci.out/$RF
+  - describe_reader_file_$BACKEND ci.out/$RF
+
+env:
+  - BACKEND=LaTeX
+  - BACKEND=SILE
+
+matrix:
+  allow_failures:
+    - env: BACKEND=SILE
+  fast_finish: true
