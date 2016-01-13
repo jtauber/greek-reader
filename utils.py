@@ -4,9 +4,10 @@ import sys
 import yaml
 
 from pyuca import Collator
-collator = Collator()
 
 from pysblgnt import morphgnt_rows
+
+collator = Collator()
 
 
 def bcv_tuple(bcv):
