@@ -1,0 +1,94 @@
+#!/bin/bash
+
+set -ev # Ref https://docs.travis-ci.com/user/customizing-the-build/#Implementing-Complex-Build-Steps
+
+# http://stackoverflow.com/questions/6187250/pdf-text-extraction/6189489#6189489
+describe_pdf_file() {
+    pdftotext "${1:?}" - | tail
+}
+
+describe_sqlite_db_file() {
+    echo '.dump' | sqlite3 "${1:?}" | head
+    echo
+    echo '.dump' | sqlite3 "${1:?}" | tail
+}
+
+build_reader_LaTeX() {
+    local D="${1:?}"
+    local T="${2:?}.tex"
+    cat - > "${D}/$T"
+    cd "$D"
+    xelatex "$T" && xelatex "$T" || exit 1
+}
+
+reader_filename_LaTeX() {
+    echo "${1:?}.pdf"
+}
+
+describe_reader_file_LaTeX() {
+    describe_pdf_file "${1:?}"
+}
+
+build_reader_SILE() {
+    local D="${1:?}"
+    local T="${2:?}.sil"
+    cat - > "${D}/$T"
+    cd "$D"
+    sile "$T" || exit 1
+}
+
+reader_filename_SILE() {
+    echo "${1:?}.pdf"
+}
+
+describe_reader_file_SILE() {
+    describe_pdf_file "${1:?}"
+}
+
+build_reader_MySword() {
+    local D="${1:?}"
+    local M="${2:?}"
+    cat - > "${D}/${M}.dump"
+    cd "$D"
+    { cat "${M}.dump" | sqlite3 "${M}.bbl.mybible"; } || exit 1
+}
+
+reader_filename_MySword() {
+    echo "${1:?}.bbl.mybible"
+}
+
+describe_reader_file_MySword() {
+    describe_sqlite_db_file "${1:?}"
+}
+
+case "${1:?}" in
+    install)
+        pip install flake8
+        pip install -r requirements.txt
+        mkdir ci.deps
+        curl -o ci.deps/lexemes.yaml https://raw.githubusercontent.com/morphgnt/morphological-lexicon/4e3dbfd872bc12d11d8949be98e4f72dfc0ea9f0/lexemes.yaml
+        ;;
+    before_script)
+        flake8 .
+        mkdir ci.out
+        ;;
+    script)
+        BACKEND=${2:?}
+        VERSES="${3:?}"
+        LOWER_OCCURRENCE_LIMIT_TO_EXCLUDE=${4:?}
+        ./frequency_exclusion.py $LOWER_OCCURRENCE_LIMIT_TO_EXCLUDE > ci.out/exclude.txt
+        wc -l ci.out/exclude.txt
+        ./make_glosses.py --exclude ci.out/exclude.txt --lexicon ci.deps/lexemes.yaml "$VERSES" > ci.out/glosses.yaml
+        ./make_headwords.py --exclude ci.out/exclude.txt --lexicon ci.deps/lexemes.yaml "$VERSES" > ci.out/headwords.yaml
+        ./make_strongs.py --exclude ci.out/exclude.txt --lexicon ci.deps/lexemes.yaml "$VERSES" > ci.out/strongs.yaml
+        ./reader.py --headwords ci.out/headwords.yaml --glosses ci.out/glosses.yaml --strongs ci.out/strongs.yaml --language eng --exclude ci.out/exclude.txt --typeface "Linux Libertine O" "$VERSES" --backend backends.$BACKEND | build_reader_$BACKEND ci.out reader
+        RF=$(reader_filename_$BACKEND reader)
+        ls -l ci.out/$RF
+        ;;
+    after_success)
+        BACKEND=${2:?}
+        RF=$(reader_filename_$BACKEND reader)
+        file ci.out/$RF
+        describe_reader_file_$BACKEND ci.out/$RF
+        ;;
+esac
