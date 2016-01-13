@@ -33,6 +33,9 @@ class LaTeX:
 \\begin{{document}}
 """.format(typeface=typeface, language=self.lang_code(language))
 
+    def book_chapter_verse(self, book, chapter, verse):
+        return "\\textbf{{\Large {}.{}.{}}}~".format(book, chapter, verse)
+
     def chapter_verse(self, chapter, verse):
         return "\\textbf{{\Large {}.{}}}~".format(chapter, verse)
 
@@ -75,6 +78,10 @@ class SILE:
 \\font[family="{typeface}",size=12pt,language=el]
 \\set[parameter=document.lineskip,value=6pt]
 """.format(typeface=typeface)
+
+    def book_chapter_verse(self, book, chapter, verse):
+        return "\\font[size=16pt,weight=700]{{{}.{}.{}}} \\nobreak".format(
+            book, chapter, verse)
 
     def chapter_verse(self, chapter, verse):
         return "\\font[size=16pt,weight=700]{{{}.{}}} \\nobreak".format(chapter, verse)
