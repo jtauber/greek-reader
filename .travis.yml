@@ -37,9 +37,9 @@ before_script:
 
 script:
   - ./frequency_exclusion.py 31 > ci.out/exclude.txt
-  - ./make_glosses.py --exclude ci.out/exclude.txt --lexicon ci.deps/lexemes.yaml "John 18:1-11" > ci.out/glosses.yaml
-  - ./make_headwords.py --exclude ci.out/exclude.txt --lexicon ci.deps/lexemes.yaml "John 18:1-11" > ci.out/headwords.yaml
-  - ./reader.py --headwords ci.out/headwords.yaml --glosses ci.out/glosses.yaml --language eng --exclude ci.out/exclude.txt --typeface "Linux Libertine O" "John 18:1-11" --backend backends.$BACKEND | build_reader_$BACKEND ci.out reader
+  - ./make_glosses.py --exclude ci.out/exclude.txt --lexicon ci.deps/lexemes.yaml "$VERSES" > ci.out/glosses.yaml
+  - ./make_headwords.py --exclude ci.out/exclude.txt --lexicon ci.deps/lexemes.yaml "$VERSES" > ci.out/headwords.yaml
+  - ./reader.py --headwords ci.out/headwords.yaml --glosses ci.out/glosses.yaml --language eng --exclude ci.out/exclude.txt --typeface "Linux Libertine O" "$VERSES" --backend backends.$BACKEND | build_reader_$BACKEND ci.out reader
   - RF=$(reader_filename_$BACKEND reader)
   - ls -l ci.out/$RF
 
@@ -48,10 +48,12 @@ after_success:
   - describe_reader_file_$BACKEND ci.out/$RF
 
 env:
-  - BACKEND=LaTeX
-  - BACKEND=SILE
+  - BACKEND=LaTeX VERSES="John 18:1-11"
+  - BACKEND=SILE VERSES="John 18:1-11"
+  - BACKEND=LaTeX VERSES="Matthew 1:1-Revelation 22:21"
 
 matrix:
   allow_failures:
-    - env: BACKEND=SILE
+    - env: BACKEND=SILE VERSES="John 18:1-11"
+    - env: BACKEND=LaTeX VERSES="Matthew 1:1-Revelation 22:21"
   fast_finish: true

@@ -57,7 +57,7 @@ def strip_textcrit(word):
 def output_reader(verses, backend, language):
     print(backend.preamble(args.typeface, language))
 
-    postponed_chapter = None
+    postponed_book = postponed_chapter = None
 
     for entry in get_morphgnt(verses):
         if entry[0] == "WORD":
@@ -81,13 +81,19 @@ def output_reader(verses, backend, language):
                 print(backend.word(text))
 
         elif entry[0] == "VERSE_START":
-            if postponed_chapter:
+            if postponed_book:
+                print(backend.book_chapter_verse(
+                    postponed_book, postponed_chapter, entry[1]))
+                postponed_book = postponed_chapter = None
+            elif postponed_chapter:
                 print(backend.chapter_verse(postponed_chapter, entry[1]))
                 postponed_chapter = None
             else:
                 print(backend.verse(entry[1]))
         elif entry[0] == "CHAPTER_START":
             postponed_chapter = entry[1]
+        elif entry[0] == "BOOK_START":
+            postponed_book = entry[1]
         else:
             print(backend.comment(entry))
 
