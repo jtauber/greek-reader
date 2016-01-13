@@ -151,9 +151,9 @@ BOOK_NAMES = [
 
 BOOK_NAME_MAPPINGS = {}
 
-for i, name_set in enumerate(BOOK_NAMES):
+for i, name_set in enumerate(BOOK_NAMES, 1):
     for name in name_set:
-        BOOK_NAME_MAPPINGS[name] = i + 1
+        BOOK_NAME_MAPPINGS[name] = i
 
 REF_RE = re.compile(r"""
         (?P<book>({}))
