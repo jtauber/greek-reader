@@ -37,6 +37,7 @@ before_script:
 
 script:
   - ./frequency_exclusion.py 31 > ci.out/exclude.txt
+  - echo "μήν" >> ci.out/exclude.txt # `μήν/N` (noun, strong 3376, gloss "a month") or `μήν/X` (particle, strong 3375, gloss "certainly")? Ref https://github.com/morphgnt/morphological-lexicon/commit/0c96a74f08381933f1de21457cc7d13f1aa5654e#diff-2d41209e747bb484493248c8f3f2158f
   - ./make_glosses.py --exclude ci.out/exclude.txt --lexicon ci.deps/lexemes.yaml "$VERSES" > ci.out/glosses.yaml
   - ./make_headwords.py --exclude ci.out/exclude.txt --lexicon ci.deps/lexemes.yaml "$VERSES" > ci.out/headwords.yaml
   - ./reader.py --headwords ci.out/headwords.yaml --glosses ci.out/glosses.yaml --language eng --exclude ci.out/exclude.txt --typeface "Linux Libertine O" "$VERSES" --backend backends.$BACKEND | build_reader_$BACKEND ci.out reader
