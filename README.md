@@ -1,5 +1,7 @@
 # greek-reader
 
+[![Build Status](https://travis-ci.org/jtauber/greek-reader.svg)](https://travis-ci.org/jtauber/greek-reader)
+
 Python 3 tool for generating (initially Biblical) Greek readers
 
 [Example from John 18:1-11][example]. The steps to produce this are listed
