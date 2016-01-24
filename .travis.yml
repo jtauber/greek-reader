@@ -36,7 +36,8 @@ before_script:
   - mkdir ci.out
 
 script:
-  - ./frequency_exclusion.py 31 > ci.out/exclude.txt
+  - ./frequency_exclusion.py $LOWER_OCCURRENCE_LIMIT_TO_EXCLUDE > ci.out/exclude.txt
+  - wc -l ci.out/exclude.txt
   - ./make_glosses.py --exclude ci.out/exclude.txt --lexicon ci.deps/lexemes.yaml "$VERSES" > ci.out/glosses.yaml
   - ./make_headwords.py --exclude ci.out/exclude.txt --lexicon ci.deps/lexemes.yaml "$VERSES" > ci.out/headwords.yaml
   - ./reader.py --headwords ci.out/headwords.yaml --glosses ci.out/glosses.yaml --language eng --exclude ci.out/exclude.txt --typeface "Linux Libertine O" "$VERSES" --backend backends.$BACKEND | build_reader_$BACKEND ci.out reader
@@ -48,12 +49,19 @@ after_success:
   - describe_reader_file_$BACKEND ci.out/$RF
 
 env:
-  - BACKEND=LaTeX VERSES="John 18:1-11"
-  - BACKEND=SILE VERSES="John 18:1-11"
-  - BACKEND=LaTeX VERSES="Matthew 1:1-Revelation 22:21"
+  - BACKEND=LaTeX VERSES="John 18:1-11" LOWER_OCCURRENCE_LIMIT_TO_EXCLUDE=31
+  - BACKEND=LaTeX VERSES="John 18:1-11" LOWER_OCCURRENCE_LIMIT_TO_EXCLUDE=48
+  - BACKEND=LaTeX VERSES="John 18:1-11" LOWER_OCCURRENCE_LIMIT_TO_EXCLUDE=662
+  - BACKEND=LaTeX VERSES="John 18:1-11" LOWER_OCCURRENCE_LIMIT_TO_EXCLUDE=1000000
+  - BACKEND=SILE VERSES="John 18:1-11" LOWER_OCCURRENCE_LIMIT_TO_EXCLUDE=31
+  - BACKEND=LaTeX VERSES="Matthew 1:1-Revelation 22:21" LOWER_OCCURRENCE_LIMIT_TO_EXCLUDE=31
+  - BACKEND=LaTeX VERSES="Matthew 1:1-Revelation 22:21" LOWER_OCCURRENCE_LIMIT_TO_EXCLUDE=48
+  - BACKEND=LaTeX VERSES="Matthew 1:1-Revelation 22:21" LOWER_OCCURRENCE_LIMIT_TO_EXCLUDE=190
 
 matrix:
   allow_failures:
-    - env: BACKEND=SILE VERSES="John 18:1-11"
-    - env: BACKEND=LaTeX VERSES="Matthew 1:1-Revelation 22:21"
+    - env: BACKEND=SILE VERSES="John 18:1-11" LOWER_OCCURRENCE_LIMIT_TO_EXCLUDE=31
+    - env: BACKEND=LaTeX VERSES="Matthew 1:1-Revelation 22:21" LOWER_OCCURRENCE_LIMIT_TO_EXCLUDE=31
+    - env: BACKEND=LaTeX VERSES="Matthew 1:1-Revelation 22:21" LOWER_OCCURRENCE_LIMIT_TO_EXCLUDE=48
+    - env: BACKEND=LaTeX VERSES="Matthew 1:1-Revelation 22:21" LOWER_OCCURRENCE_LIMIT_TO_EXCLUDE=190
   fast_finish: true
