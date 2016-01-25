@@ -15,7 +15,6 @@ class LaTeX:
 
 \\usepackage{{setspace}}
 \\usepackage{{fontspec}}
-\\usepackage{{dblfnote}}
 \\usepackage{{pfnote}}
 \\usepackage{{polyglossia}}
 \\setdefaultlanguage[variant=ancient]{{greek}}
