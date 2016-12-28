@@ -37,7 +37,8 @@ class LaTeX:
 \\textbf{{\Large {}.{}.{}}}~""".format(book, chapter, verse)
 
     def chapter_verse(self, chapter, verse):
-        return "\\textbf{{\Large {}.{}}}~".format(chapter, verse)
+        return """
+\\textbf{{\Large {}.{}}}~""".format(chapter, verse)
 
     def verse(self, verse):
         return "\\textbf{{{}}}~".format(verse)
