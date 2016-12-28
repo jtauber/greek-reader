@@ -34,7 +34,8 @@ class LaTeX:
 """.format(typeface=typeface, language=self.lang_code(language))
 
     def book_chapter_verse(self, book, chapter, verse):
-        return "\\textbf{{\Large {}.{}.{}}}~".format(book, chapter, verse)
+        return """
+\\textbf{{\Large {}.{}.{}}}~""".format(book, chapter, verse)
 
     def chapter_verse(self, chapter, verse):
         return "\\textbf{{\Large {}.{}}}~".format(chapter, verse)
