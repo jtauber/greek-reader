@@ -9,6 +9,7 @@ argparser = argparse.ArgumentParser()
 argparser.add_argument("verses", help="verses to cover (e.g. 'John 18:1-11')")
 argparser.add_argument("--headwords", help="headwords file")
 argparser.add_argument("--glosses", help="glosses file")
+argparser.add_argument("--strongs", help="strongs file")
 argparser.add_argument(
     "--language", default="eng",
     help="language of glosses and other non-Greek text (defaults to eng)")
@@ -39,6 +40,11 @@ if args.headwords:
     headwords = load_yaml(args.headwords)
 else:
     headwords = {}
+
+if args.strongs:
+    strongs = load_yaml(args.strongs)
+else:
+    strongs = None
 
 
 def verb_parse(ccat_parse):
@@ -72,11 +78,13 @@ def output_reader(verses, backend, language):
                         row["bcv"], glosses[lexeme]["default"])
                 else:
                     gloss = None
+                strong = strongs.get(lexeme)
                 if pos in ["V-"]:
                     parse = verb_parse(row["ccat-parse"])
                 else:
                     parse = None
-                print(backend.word(text, headword, parse, gloss, language))
+                print(backend.word(text, headword, parse, row["robinson"],
+                                   gloss, strong, language))
             else:
                 print(backend.word(text))
 
