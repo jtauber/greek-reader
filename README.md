@@ -34,11 +34,7 @@ For other Greek projects of mine, see <http://jktauber.com/>.
 As well as Python 3, you'll need to install the packages in `requirements.txt`
 via `pip` (preferably in a virtualenv).
 
-This requirements file now includes the MorphGNT SBLGNT but if you want the
-headwords and/or glosses from the `morphological-lexicon` you'll need to clone
-that repo separately.
-
-Finally, XeTeX is required as the current output of my scripts is LaTeX with
+XeTeX is required as the current output of my scripts is LaTeX with
 Unicode (although I do plan to support other backends eventually). On OS X,
 I use the [MacTeX distribution][mactex].
 
@@ -100,10 +96,10 @@ might look like this:
     θήκη:
         default: sheath
 
-If you have the `morphological-lexicon` checked out, you can auto-generate an
-initial gloss file based on John Jeffrey Dodson's public domain lexicon using
-`make_glosses.py` which takes a verse range argument just like `reader.py` as
-well as an `--exclude` option.
+You can auto-generate an initial gloss file based on John Jeffrey Dodson's
+public domain lexicon (via `lexemes.yaml` in this repo) using `make_glosses.py`
+which takes a verse range  argument just like `reader.py` as well as an
+`--exclude` option.
 
 If you want to extend an existing glosses file you can pass its name in using
 the `--existing` option. This is useful if you've already made edits to the file
@@ -128,10 +124,10 @@ headword you want to use instead. For example:
     θήκη: θήκη, ης, ἡ
     Κεδρών: Κεδρών, ὁ
 
-If you have the `morphological-lexicon` checked out, you can run
-`make_headwords.py` to generate headword overrides for nouns and adjectives
-based on Danker's Concise Lexicon. `make_headwords.py` takes a verse range
-argument just like `reader.py` as well as an `--exclude` option.
+You can run `make_headwords.py` to generate headword overrides for nouns and
+adjectives based on Danker's Concise Lexicon (via the `lexemes.yaml` file).
+`make_headwords.py` takes a verse range argument just like `reader.py` as well
+as an `--exclude` option.
 
 If you want to extend an existing headword file you can pass its name in using
 the `--existing` option. This is useful if you've already made edits to the file

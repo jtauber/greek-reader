@@ -17,9 +17,9 @@ argparser.add_argument(
     help="existing glosses file")
 argparser.add_argument(
     "--lexicon", dest="lexemes",
-    default="../morphological-lexicon/lexemes.yaml",
-    help="path to morphological-lexicon lexemes.yaml file "
-         "(defaults to ../morphological-lexicon/lexemes.yaml)")
+    default="lexemes.yaml",
+    help="path to lexemes file "
+         "(defaults to lexemes.yaml)")
 
 args = argparser.parse_args()
 
