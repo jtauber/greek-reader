@@ -20,8 +20,6 @@ addons:
 install:
   - pip install flake8
   - pip install -r requirements.txt
-  - mkdir ci.deps
-  - curl -o ci.deps/lexemes.yaml https://raw.githubusercontent.com/morphgnt/morphological-lexicon/4e3dbfd872bc12d11d8949be98e4f72dfc0ea9f0/lexemes.yaml
 
 before_script:
   - describe_pdf_file() { pdftotext "${1:?}" - | tail; } # http://stackoverflow.com/questions/6187250/pdf-text-extraction/6189489#6189489
@@ -38,8 +36,8 @@ before_script:
 script:
   - ./frequency_exclusion.py $LOWER_OCCURRENCE_LIMIT_TO_EXCLUDE > ci.out/exclude.txt
   - wc -l ci.out/exclude.txt
-  - ./make_glosses.py --exclude ci.out/exclude.txt --lexicon ci.deps/lexemes.yaml "$VERSES" > ci.out/glosses.yaml
-  - ./make_headwords.py --exclude ci.out/exclude.txt --lexicon ci.deps/lexemes.yaml "$VERSES" > ci.out/headwords.yaml
+  - ./make_glosses.py --exclude ci.out/exclude.txt "$VERSES" > ci.out/glosses.yaml
+  - ./make_headwords.py --exclude ci.out/exclude.txt "$VERSES" > ci.out/headwords.yaml
   - ./reader.py --headwords ci.out/headwords.yaml --glosses ci.out/glosses.yaml --language eng --exclude ci.out/exclude.txt --typeface "Linux Libertine O" "$VERSES" --backend backends.$BACKEND | build_reader_$BACKEND ci.out reader
   - RF=$(reader_filename_$BACKEND reader)
   - ls -l ci.out/$RF
