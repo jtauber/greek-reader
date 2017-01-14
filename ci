@@ -65,6 +65,8 @@ case "${1:?}" in
     install)
         pip install flake8
         pip install -r requirements.txt
+        mkdir ci.deps
+        curl -o ci.deps/lexemes.yaml https://raw.githubusercontent.com/morphgnt/morphological-lexicon/a5ede21504d6f694497a9310f44e6acbeec202aa/lexemes.yaml
         ;;
     before_script)
         flake8 .
@@ -78,7 +80,7 @@ case "${1:?}" in
         wc -l ci.out/exclude.txt
         ./make_glosses.py --exclude ci.out/exclude.txt "$VERSES" > ci.out/glosses.yaml
         ./make_headwords.py --exclude ci.out/exclude.txt "$VERSES" > ci.out/headwords.yaml
-        ./make_strongs.py --exclude ci.out/exclude.txt "$VERSES" > ci.out/strongs.yaml
+        ./make_strongs.py --exclude ci.out/exclude.txt --lexicon ci.deps/lexemes.yaml "$VERSES" > ci.out/strongs.yaml
         ./reader.py --headwords ci.out/headwords.yaml --glosses ci.out/glosses.yaml --strongs ci.out/strongs.yaml --language eng --exclude ci.out/exclude.txt --typeface "Linux Libertine O" "$VERSES" --backend backends.$BACKEND | build_reader_$BACKEND ci.out reader
         RF=$(reader_filename_$BACKEND reader)
         ls -l ci.out/$RF
