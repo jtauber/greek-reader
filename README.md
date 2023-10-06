@@ -174,7 +174,8 @@ You can see the results of this in the [examples directory][examples].
 A `--backend` option can be provided to `reader.py` to use an alternative
 backend. This option takes a module-qualified Python class name. As well as the
 default `backends.LaTeX`, there is an experimental `backends.SILE` included for
-the [SILE Typesetter][sile].
+the [SILE Typesetter][sile] and `backends.MARKDOWN` for [Markdown][markdown], most
+useful for Markdown processors that support footnotes, for example [GitHub][github].
 
     ./reader.py --backend backends.SILE "John 18:1-11" > reader.sil
     sile reader.sil
@@ -184,3 +185,5 @@ the [SILE Typesetter][sile].
   [examples]: https://github.com/jtauber/greek-reader/tree/master/example
   [mactex]: http://tug.org/mactex/mactex-download.html
   [sile]: http://www.sile-typesetter.org
+  [markdown]: http://daringfireball.net/projects/markdown/
+  [github]: https://github.blog/changelog/2021-09-30-footnotes-now-supported-in-markdown-fields/
