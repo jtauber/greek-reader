@@ -21,7 +21,7 @@ class LaTeX:
 \\setotherlanguage{{{language}}}
 
 \\setromanfont{{{typeface}}}
-
+\\newfontfamily\greekfont[Script=Greek]{{{typeface}}}
 \\linespread{{1.5}}
 \\onehalfspacing
 
