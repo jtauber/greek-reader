@@ -1,11 +1,10 @@
 import importlib
 import re
 import sys
+
 import yaml
-
-from pyuca import Collator
-
 from pysblgnt import morphgnt_rows
+from pyuca import Collator
 
 collator = Collator()
 
@@ -98,7 +97,7 @@ def load_yaml(filename, wrapper=lambda key, metadata: metadata):
     with open(filename) as f:
         return {
             key: wrapper(key, metadata)
-            for key, metadata in (yaml.load(f, Loader=yaml.FullLoader) or {}).items()
+            for key, metadata in (yaml.load(f, Loader=yaml.Loader) or {}).items()
         }
 
 
