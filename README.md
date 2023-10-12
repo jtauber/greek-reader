@@ -180,7 +180,7 @@ the [SILE Typesetter][sile].
     sile reader.sil
 
   [example]: https://github.com/jtauber/greek-reader/raw/master/example/reader.pdf
-  [goodfri]: http://ntexegesis.com/blog/2014/4/18/a-good-friday-greek-reader-john-18-19
+  [goodfri]: https://www.brianrenshaw.com/a-good-friday-greek-reader-john-18-19
   [examples]: https://github.com/jtauber/greek-reader/tree/master/example
   [mactex]: http://tug.org/mactex/mactex-download.html
   [sile]: http://www.sile-typesetter.org
