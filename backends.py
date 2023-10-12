@@ -1,3 +1,5 @@
+import string
+
 from utils import load_yaml
 
 
@@ -45,7 +47,7 @@ class LaTeX:
 
     def word(self, text, headword=None, parse=None, gloss=None, language=None):
         if headword is None and parse is None and gloss is None:
-            return text
+            return text + "\n"
         else:
             footnote = []
             if headword:
@@ -55,7 +57,7 @@ class LaTeX:
             if gloss:
                 footnote.append("\\textendash\\ \\text{}{{\\textit{{{}}}}}".format(self.lang_code(language), gloss))
 
-            return "{}\\footnote{{{}}}".format(text, " ".join(footnote))
+            return "{}\\footnote{{{}}}\n".format(text, " ".join(footnote))
 
     def comment(self, text):
         return "% {}".format(text)
@@ -92,7 +94,7 @@ class SILE:
 
     def word(self, text, headword=None, parse=None, gloss=None, language=None):
         if headword is None and parse is None and gloss is None:
-            return text
+            return text + "\n"
         else:
             footnote = []
             if headword:
@@ -102,10 +104,71 @@ class SILE:
             if gloss:
                 footnote.append("– \\font[style=italic,language={}]{{{}}}".format(self.lang_code(language), gloss))
 
-            return "{}\\footnote{{{}}} %".format(text, " ".join(footnote))
+            return "{}\\footnote{{{}}} %\n".format(text, " ".join(footnote))
 
     def comment(self, text):
         return "% {}".format(text)
 
     def postamble(self):
         return "\\end{document}"
+
+
+class MARKDOWN:
+
+    def __init__(self) -> None:
+        self.footnote_counter = 0
+        self.footnotes = []
+        self.footnote_to_counter_map = {}
+
+    def lang_code(self, language):
+        return language
+
+    def preamble(self, typeface, language):
+        return ""
+
+    def book_chapter_verse(self, book, chapter, verse):
+        return "**{}.{}.{}** ".format(book, chapter, verse)
+
+    def chapter_verse(self, chapter, verse):
+        return "**{}.{}** ".format(chapter, verse)
+
+    def verse(self, verse):
+        return "_{}_ ".format(verse)
+
+    def word(self, text, headword=None, parse=None, gloss=None, language=None):
+        if headword is None and parse is None and gloss is None:
+            return text + " "
+        else:
+            footnote_number = None
+            found = False
+            # get rid of all punctuation etc for text
+            stripped_text = text.translate(str.maketrans('', '', string.punctuation))
+            if stripped_text in self.footnote_to_counter_map:
+                found = True
+                footnote_number = self.footnote_to_counter_map[stripped_text]
+            else:
+                self.footnote_counter += 1
+                self.footnote_to_counter_map[stripped_text] = self.footnote_counter
+                footnote_number = self.footnote_counter
+
+            if not found:
+                footnote = []
+                footnote.append("[^{}]: ".format(self.footnote_counter))
+                if headword:
+                    footnote.append(headword)
+                if parse:
+                    footnote.append("– {}".format(parse))
+                if gloss:
+                    footnote.append("– *{}*".format(gloss))
+
+                self.footnotes.append(" ".join(footnote))
+
+            return "{}[^{}] ".format(text, footnote_number)
+
+    def comment(self, text):
+        return ""
+
+    def postamble(self):
+        if self.footnotes:
+            footnotes = "\n\n".join(self.footnotes)
+            return "----\n{}".format(footnotes)

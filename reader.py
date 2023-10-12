@@ -2,8 +2,8 @@
 
 import argparse
 
-from utils import load_yaml, load_wordset, load_path_attr
-from utils import get_morphgnt, parse_verse_ranges
+from utils import (get_morphgnt, load_path_attr, load_wordset, load_yaml,
+                   parse_verse_ranges)
 
 argparser = argparse.ArgumentParser()
 argparser.add_argument("verses", help="verses to cover (e.g. 'John 18:1-11')")
@@ -76,20 +76,20 @@ def output_reader(verses, backend, language):
                     parse = verb_parse(row["ccat-parse"])
                 else:
                     parse = None
-                print(backend.word(text, headword, parse, gloss, language))
+                print(backend.word(text, headword, parse, gloss, language), end="")
             else:
-                print(backend.word(text))
+                print(backend.word(text), end="")
 
         elif entry[0] == "VERSE_START":
             if postponed_book:
                 print(backend.book_chapter_verse(
-                    postponed_book, postponed_chapter, entry[1]))
+                    postponed_book, postponed_chapter, entry[1]), end="")
                 postponed_book = postponed_chapter = None
             elif postponed_chapter:
-                print(backend.chapter_verse(postponed_chapter, entry[1]))
+                print(backend.chapter_verse(postponed_chapter, entry[1]), end="")
                 postponed_chapter = None
             else:
-                print(backend.verse(entry[1]))
+                print(backend.verse(entry[1]), end="")
         elif entry[0] == "CHAPTER_START":
             postponed_chapter = entry[1]
         elif entry[0] == "BOOK_START":
